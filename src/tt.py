@@ -1,4 +1,4 @@
-from srm_client.client import SrmClient, InternalSrmClient
+rom srm_client.client import SrmClient, InternalSrmClient
 
 #with SrmClient('10.4.232.217:9086/srm.wsdl', '10.4.232.217\Administrator', 'nutanix/4u').open() as client:
 #with SrmClient('10.5.216.143:9086/vcdr/extapi/sdk', 'Administrator', 'nutanix/4u').open() as client:
@@ -13,3 +13,4 @@ i_client = InternalSrmClient('10.4.232.33:9086/vcdr/extapi/sdk', 'administrator@
 print "0+0+" * 4
 print i_client.get_protection_groups()
 print "0-0-" * 8
+
