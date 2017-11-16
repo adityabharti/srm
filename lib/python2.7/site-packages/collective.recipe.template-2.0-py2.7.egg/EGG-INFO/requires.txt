@@ -1,0 +1,8 @@
+setuptools
+zc.buildout
+
+[genshi]
+Genshi
+
+[test]
+zope.testing
