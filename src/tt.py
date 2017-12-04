@@ -1,16 +1,15 @@
-rom srm_client.client import SrmClient, InternalSrmClient
+from srm_client.client import SrmClient
+import json
 
-#with SrmClient('10.4.232.217:9086/srm.wsdl', '10.4.232.217\Administrator', 'nutanix/4u').open() as client:
-#with SrmClient('10.5.216.143:9086/vcdr/extapi/sdk', 'Administrator', 'nutanix/4u').open() as client:
-'''
-with SrmClient('10.4.232.33:9086/vcdr/extapi/sdk', 'administrator@nutanix.local', 'Apple4u2$').open() as client:
-  print "--->Printing recovery plans"
-  print client.get_recovery_plans()
-  print "XXX>Recovery plans printed"'''
-
-i_client = InternalSrmClient('10.4.232.33:9086/vcdr/extapi/sdk', 'administrator@nutanix.local', 'Apple4u2$')
-
-print "0+0+" * 4
-print i_client.get_protection_groups()
-print "0-0-" * 8
-
+with SrmClient('10.1.56.117:9086/vcdr/extapi/sdk', 'administrator@hqdevsrmsso.local', 'Nutanix/4u').open() as client:
+#with SrmClient('10.137.6.72:9086/vcdr/extapi/sdk', 'administrator@vsphere.local', 'Nutanix/4u').open() as client:
+  #print client.get_recovery_plans()
+  print "\n\nSite name:\n"
+  print client.get_site_name()
+  print "\n\nRetrieve Content:\n"
+  print json.dumps(client.retrieve_content(), indent=3)
+  print "\n\nList Paired Site:\n"
+  print json.dumps(client.get_paired_site(), indent=5)
+  print "\n\nListing Inventory Mappings:\n"
+  print client.list_inventory_mappings()
+  #print json.dumps(client.list_inventory_mappings(), indent=3, sort_keys=True)

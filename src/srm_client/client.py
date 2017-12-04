@@ -8,7 +8,6 @@ from infi.pyutils.lazy import cached_method
 
 logger = logging.getLogger(__name__)
 
-
 class SrmClientException(Exception):
     pass
 
@@ -36,14 +35,14 @@ class BaseClient(object):
 
 class SrmClient(BaseClient):
     def __init__(self, hostname, username, password):
-        self.url = 'https://%s:9007/' % hostname
+        self.url = 'https://%s/' % hostname
         self.username = username
         self.password = password
         self.jinja_env = Environment(loader=PackageLoader('srm_client'))
         self.session = requests.Session() # the session is used to keep vmware's auth cookie
         self.session.headers.update({
             'Content-Type': 'text/xml;charset=UTF-8',
-            'SOAPAction': 'urn:srm0/2.0'
+            'SOAPAction': 'urn:srm0/5.0'
         })
 
     @contextmanager
@@ -67,6 +66,38 @@ class SrmClient(BaseClient):
             groups = [pg['#text'] for pg in _listify(data['protectionGroups'])]
             ret[data['name']] = dict(moref=moref, state=data['state'], groups=groups)
         return ret
+
+    def retrieve_content(self):
+      data = self._send('MyRetrieveContent.xml')
+      return data['RetrieveContentResponse']['returnval']
+
+    def get_history(self):
+      data = self._send('MyGetHistory.xml')
+      return data['GetHistoryResponse']['returnval']
+
+    def get_info(self):
+      data = self._send('MyGetInfo.xml')
+      return data['GetInfoResponse']['returnval']
+
+    def get_site_name(self):
+      data = self._send('MyGetSiteName.xml')
+      return data['GetSiteNameResponse']['returnval']
+
+    def get_paired_site(self):
+      data = self._send('MyGetPairedSite.xml')
+      x = {}
+      z = data['GetPairedSiteResponse']['returnval']
+      for key, value in z.iteritems():
+        x[key] = value
+
+      return data
+
+    def list_inventory_mappings(self):
+      data = self._send("MyListInventoryMappings.xml")
+      import json
+      return json.dumps(data, indent=3)
+      #return data['ListInventoryMappingsResponse']['returnval']
+
 
     def recovery_start(self, moref, mode):
         assert mode in ('test', 'cleanupTest', 'failover', 'reprotect', 'revert')
